@@ -265,12 +265,8 @@ get_child_cmds() {
   # macOS
   if is_macos
   then
-    # Untested, contributed by @liuruibin
-    # https://github.com/pschmitt/tmux-ssh-split/pull/6
-    # NOTE Shouldn't we use "ps a" here?
-    # shellcheck disable=SC2009
-    ps -o ppid=,pid=,command= | \
-      awk '/^\s*'"${ppid}"'\s+/ { $1=""; print $0 }'
+    # Fixed version for macOS
+    ps -o ppid,pid,command | awk -v ppid="$ppid" '$1 == ppid { for(i=3; i<=NF; i++) cmd = (cmd ? cmd " " $i : $i); print $2, cmd; cmd="" }'
     return "$?"
   fi
 
